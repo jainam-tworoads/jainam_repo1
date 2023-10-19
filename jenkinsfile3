@@ -27,7 +27,7 @@ pipeline {
         }
 	stage('Deploy2'){
 		when {
-                	expression { currentBuild.resultIsEqualTo('FAILURE') }
+                	expression { currentBuild.resultIs('FAILURE') }
             	}
 		steps{
 			sh 'echo "Inside Deploy2 Stage"'
