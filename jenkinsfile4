@@ -20,7 +20,7 @@ pipeline {
                 retry(3) {
 		    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE'){
 		    	sh 'echo "Inside Deploy1 Stage"'
-                    	sh 'ssh dvcinfra@10.23.5.26 "/home/dvcinfra/jainam/exp_26/sample_bash1.sh"'
+                    	sh 'ssh dvcinfra@10.23.5.26 "/home/dvcinfra/jainam/exp_26/sample_bash.sh"'
 		    }
                 }
             }
