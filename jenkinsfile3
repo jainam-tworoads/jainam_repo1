@@ -26,18 +26,16 @@ pipeline {
             }
         }
 	stage('Deploy2'){
+		when {
+               		expression { currentBuild.resultIsBetterOrEqualTo('FAILURE') }
+                }
+
 		steps{
-			when {
-                        	expression { currentBuild.resultIs('FAILURE') }
-                	}
 			sh 'echo "Inside Deploy2 Stage"'
 		}
 	}
 	stage('Deploy3'){
 		steps{
-			when {
-                        	expression { currentBuild.resultIsBetterOrEqualTo('FAILURE') }
-               	 	}
 			sh 'echo "Inside Deploy3 stage"'
 		}
 	}
