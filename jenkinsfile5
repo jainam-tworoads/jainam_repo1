@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment{
+	deploy1_attempts = 0
+    }
     stages {
         stage('Build') {
             steps {
@@ -17,8 +20,7 @@ pipeline {
         }
         stage('Deploy1') {
             steps {
-		def deploy1_attempts=0
-                retry(3) {
+                retry(4) {
 		    if(deploy1_attempts>=1){
 			def userInput = input(
                        	 id: 'userInput',
@@ -35,7 +37,7 @@ pipeline {
                     	 error "Pipeline aborted by user"
                	        }
 		    }
-		    deploy1_attempts=deploy1_attempts+1
+		    deploy1_attempts++
 		    sh 'echo "Inside Deploy1 Stage"'
                     sh 'ssh dvcinfra@10.23.5.26 "/home/dvcinfra/jainam/exp_26/sample_bash_script1.sh"'
                 }
