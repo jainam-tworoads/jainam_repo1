@@ -21,7 +21,7 @@ pipeline {
         stage('Deploy1') {
             steps {
                 retry(4) {
-		    if(deploy1_attempts>=1){
+		    if (deploy1_attempts >= 1){
 			def userInput = input(
                        	 id: 'userInput',
                          message: 'Deploy1 stage failed. Do you want to re-run this stage?',
