@@ -20,27 +20,29 @@ pipeline {
         }
         stage('Deploy1') {
             steps {
-                retry(4) {
-		    if (deploy1_attempts >= 1){
-			def userInput = input(
-                       	 id: 'userInput',
-                         message: 'Deploy1 stage failed. Do you want to re-run this stage?',
-                         parameters: [choice(name: 'ACTION', choices: 'Re-run\nAbort', description: 'Select an action')]
-               	        )
+		script{
+                	retry(4) {
+		    		if (deploy1_attempts >= 1){
+					def userInput = input(
+                       	 	 	id: 'userInput',
+                        	 	message: 'Deploy1 stage failed. Do you want to re-run this stage?',
+                         	 	parameters: [choice(name: 'ACTION', choices: 'Re-run\nAbort', description: 'Select an action')]
+               	       	        	)
 
-			if (userInput == 'Re-run') {
-                       	 echo "Re-running the failed stage..."
-                        } 
-			else {
-                         echo "Aborting the pipeline as per user request."
-                    	 currentBuild.result = 'ABORTED'
-                    	 error "Pipeline aborted by user"
-               	        }
-		    }
-		    deploy1_attempts++
-		    sh 'echo "Inside Deploy1 Stage"'
-                    sh 'ssh dvcinfra@10.23.5.26 "/home/dvcinfra/jainam/exp_26/sample_bash_script1.sh"'
-                }
+					if (userInput == 'Re-run') {
+                       	 		echo "Re-running the failed stage..."
+                        		} 
+					else {
+                        		 echo "Aborting the pipeline as per user request."
+                    	 		 currentBuild.result = 'ABORTED'
+                    	 		 error "Pipeline aborted by user"
+               	        		}
+		    		}
+		    		deploy1_attempts++
+		   		sh 'echo "Inside Deploy1 Stage"'
+                    		sh 'ssh dvcinfra@10.23.5.26 "/home/dvcinfra/jainam/exp_26/sample_bash_script1.sh"'
+                	}
+		}
             }
         }
 	stage('Deploy2'){
