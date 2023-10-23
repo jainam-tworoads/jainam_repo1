@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo "Hello World"'
+                sh '''
+                    echo "Multiline shell steps works too"
+                    ls -lah
+                '''
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'echo "Test Passed"'
+            }
+        }
+        stage('Deploy1') {
+            steps {
+		def deploy1_attempts=0
+                retry(3) {
+		    if(deploy1_attempts>=1){
+			def userInput = input(
+                       	 id: 'userInput',
+                         message: 'Deploy1 stage failed. Do you want to re-run this stage?',
+                         parameters: [choice(name: 'ACTION', choices: 'Re-run\nAbort', description: 'Select an action')]
+               	        )
+
+			if (userInput == 'Re-run') {
+                       	 echo "Re-running the failed stage..."
+                        } 
+			else {
+                         echo "Aborting the pipeline as per user request."
+                    	 currentBuild.result = 'ABORTED'
+                    	 error "Pipeline aborted by user"
+               	        }
+		    }
+		    deploy1_attempts=deploy1_attempts+1
+		    sh 'echo "Inside Deploy1 Stage"'
+                    sh 'ssh dvcinfra@10.23.5.26 "/home/dvcinfra/jainam/exp_26/sample_bash_script1.sh"'
+                }
+            }
+        }
+	stage('Deploy2'){
+		steps{
+			sh 'echo "Inside Deploy2 Stage"'
+		}
+	}
+	stage('Deploy3'){
+		steps{
+			sh 'echo "Inside Deploy3 stage"'
+		}
+	}
+    }
+    post {
+          always {
+              echo 'This will always run'
+          }
+          success {
+              echo 'This will run only if successful'
+          }
+          failure {
+              echo 'This will run only if failed'
+          }
+          unstable {
+              echo 'This will run only if the run was marked as unstable'
+          }
+          changed {
+              echo 'This will run only if the state of the Pipeline has changed'
+              echo 'For example, if the Pipeline was previously failing but is now successful'
+          }
+    }
+}
