@@ -17,8 +17,8 @@ pipeline {
 				echo 'Files exist. Skipping rsync.'
 			}
 			else{
-				sh 'ssh dvcinfra@192.168.132.11 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_BSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsbse 2>&1"'
-				sh 'ssh dvcinfra@192.168.132.11 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_NSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsnse 2>&1"'
+				sh 'ssh dvcinfra@192.168.132.11 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_BSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsbse"'
+				sh 'ssh dvcinfra@192.168.132.11 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_NSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsnse"'
 			}
 		}
 	   }
@@ -26,7 +26,7 @@ pipeline {
         stage('PreConversion') {
             steps {
                 sh 'echo "PreConversion stage"'
-                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} PreConversion >/tmp/bsepreconversion_logs 2>&1"' 
+                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} PreConversion >/tmp/bsepreconversion_logs"' 
             }
         }
         stage('BseDataConversionATOJ') {
@@ -51,7 +51,7 @@ pipeline {
 		    		}
 		    		bse_atoj_attempts++
                 		sh 'echo "BseDataConversion ATOJ stage"'
-                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_ATOJ >/tmp/bseconversionatoj_logs 2>&1"'
+                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_ATOJ >/tmp/bseconversionatoj_logs"'
 			}
 		}
             }
@@ -78,7 +78,7 @@ pipeline {
                                 }
                                 bse_rest_attempts++
                 		sh 'echo "BseDataConversion Rest stage"'
-                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_rest >/tmp/bseconversionrest_logs 2>&1"'
+                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_rest >/tmp/bseconversionrest_logs"'
 			}
 		}
             }
@@ -105,7 +105,7 @@ pipeline {
                                 }
                                 nse_atoj_attempts++
                 		sh 'echo "NseDataConversion ATOJ stage"'
-                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_ATOJ >/tmp/nseconversionatoj_logs 2>&1"'
+                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_ATOJ >/tmp/nseconversionatoj_logs"'
 			}
 		}
             }
@@ -132,7 +132,7 @@ pipeline {
                                 }
                                 nse_rest_attempts++
                 		sh 'echo "NseDataConversion Rest stage"'
-                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs 2>&1"'
+                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs"'
 			}
 		}
             }
@@ -140,7 +140,7 @@ pipeline {
 	stage('CompressData') {
             steps {
                 sh 'echo "CompressData stage"'
-                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} CompressData >/tmp/bsecompressdata_logs 2>&1"'
+                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} CompressData >/tmp/bsecompressdata_logs"'
             }
         }
 
