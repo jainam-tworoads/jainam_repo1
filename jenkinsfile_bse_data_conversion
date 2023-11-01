@@ -31,110 +31,26 @@ pipeline {
         }
         stage('BseDataConversionATOJ') {
             steps {
-		script{
-			retry(5){
-				if (bse_atoj_attempts >= 1){
-					def userInput = input(
-                       	 	 	id: 'userInput',
-                        	 	message: 'BseDataConversionATOJ stage failed. Do you want to re-run this stage?',
-                         	 	parameters: [choice(name: 'ACTION', choices: 'Re-run\nAbort', description: 'Select an action')]
-               	       	        	)
-
-					if (userInput == 'Re-run') {
-                       	 		echo "Re-running the failed stage..."
-                        		} 
-					else {
-                        		 echo "Aborting the pipeline as per user request."
-                    	 		 currentBuild.result = 'ABORTED'
-                    	 		 error "Pipeline aborted by user"
-               	        		}
-		    		}
-		    		bse_atoj_attempts++
-                		sh 'echo "BseDataConversion ATOJ stage"'
-                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_ATOJ >/tmp/bseconversionatoj_logs"'
-			}
-		}
+                sh 'echo "BseDataConversion ATOJ stage"'
+                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_ATOJ >/tmp/bseconversionatoj_logs"'
             }
         }
 	stage('BseDataConversionRest') {
             steps {
-		script{
-			retry(5){
-				if (bse_rest_attempts >= 1){
-                                        def userInput = input(
-                                        id: 'userInput',
-                                        message: 'BseDataConversionRest stage failed. Do you want to re-run this stage?',
-                                        parameters: [choice(name: 'ACTION', choices: 'Re-run\nAbort', description: 'Select an action')]
-                                        )
-
-                                        if (userInput == 'Re-run') {
-                                        echo "Re-running the failed stage..."
-                                        }
-                                        else {
-                                         echo "Aborting the pipeline as per user request."
-                                         currentBuild.result = 'ABORTED'
-                                         error "Pipeline aborted by user"
-                                        }
-                                }
-                                bse_rest_attempts++
-                		sh 'echo "BseDataConversion Rest stage"'
-                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_rest >/tmp/bseconversionrest_logs"'
-			}
-		}
+                sh 'echo "BseDataConversion Rest stage"'
+                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_rest >/tmp/bseconversionrest_logs"'
             }
         }
         stage('NseDataConversionATOJ') {
             steps {
-		script{
-			retry(5){
-				if (nse_atoj_attempts >= 1){
-                                        def userInput = input(
-                                        id: 'userInput',
-                                        message: 'NseDataConversionATOJ stage failed. Do you want to re-run this stage?',
-                                        parameters: [choice(name: 'ACTION', choices: 'Re-run\nAbort', description: 'Select an action')]
-                                        )
-
-                                        if (userInput == 'Re-run') {
-                                        echo "Re-running the failed stage..."
-                                        }
-                                        else {
-                                         echo "Aborting the pipeline as per user request."
-                                         currentBuild.result = 'ABORTED'
-                                         error "Pipeline aborted by user"
-                                        }
-                                }
-                                nse_atoj_attempts++
-                		sh 'echo "NseDataConversion ATOJ stage"'
-                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_ATOJ >/tmp/nseconversionatoj_logs"'
-			}
-		}
+                sh 'echo "NseDataConversion ATOJ stage"'
+                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_ATOJ >/tmp/nseconversionatoj_logs"'
             }
         }
 	stage('NseDataConversionRest') {
             steps {
-		script{
-			retry(5){
-				if (nse_rest_attempts >= 1){
-                                        def userInput = input(
-                                        id: 'userInput',
-                                        message: 'NseDataConversionRest stage failed. Do you want to re-run this stage?',
-                                        parameters: [choice(name: 'ACTION', choices: 'Re-run\nAbort', description: 'Select an action')]
-                                        )
-
-                                        if (userInput == 'Re-run') {
-                                        echo "Re-running the failed stage..."
-                                        }
-                                        else {
-                                         echo "Aborting the pipeline as per user request."
-                                         currentBuild.result = 'ABORTED'
-                                         error "Pipeline aborted by user"
-                                        }
-                                }
-                                nse_rest_attempts++
-                		sh 'echo "NseDataConversion Rest stage"'
-                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs"'
-			}
-		}
+                sh 'echo "NseDataConversion Rest stage"'
+                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs"'
             }
         }
 	stage('CompressData') {
