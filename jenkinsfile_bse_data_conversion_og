@@ -4,7 +4,7 @@ pipeline {
         stage('DataConversion') {
             steps {
                 sh 'echo "DataConversion stage"'
-                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12.sh ${date_}>/tmp/bsedataconversion_logs 2>&1"' 
+                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod/live_scripts/Run_Convert_Both_MTBT_data_indb12.sh ${date_} >/tmp/bsedataconversion_logs 2>&1"' 
             }
         }
     }
