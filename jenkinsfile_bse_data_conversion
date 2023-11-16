@@ -6,7 +6,11 @@ pipeline {
 		sh 'echo "CheckData stage"'
 		script{
 			def file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /spare/local/MDSlogs/GENERIC | grep ${date_} | wc -l"', returnStdout: true).trim().toInteger()
-
+			
+			if (date_ == "TODAY"){
+				file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /spare/local/MDSlogs/GENERIC | grep ${new Date().format("yyyyMMdd", TimeZone.getTimeZone('UTC'))} | wc -l"', returnStdout: true).trim().toInteger()
+			}			
+			
 			if(file_count > 0){
 				echo 'Files exist. Skipping rsync.'
 			}
