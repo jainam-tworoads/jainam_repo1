@@ -1,11 +1,5 @@
 pipeline {
-    agent any
-    environment{
-	bse_atoj_attempts = 0
-	bse_rest_attempts = 0
-	nse_atoj_attempts = 0
-        nse_rest_attempts = 0
-    }	
+    agent any	
     stages {
 	stage('CheckData'){
 	   steps{
