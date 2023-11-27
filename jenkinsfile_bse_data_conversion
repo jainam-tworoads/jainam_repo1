@@ -5,21 +5,21 @@ pipeline {
 	   steps{
 		sh 'echo "CheckData stage"'
 		script{
-			def bse_file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /spare/local/MDSlogs/GENERIC | grep "ALLDATA_${date_}_BSE" | wc -l"', returnStdout: true).trim().toInteger()
-			def nse_file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /spare/local/MDSlogs/GENERIC | grep "ALLDATA_${date_}_NSE" | wc -l"', returnStdout: true).trim().toInteger()
+			def alldata_bse_file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /NAS1/GENERIC | grep "ALLDATA_${date_}_BSE" | wc -l"', returnStdout: true).trim().toInteger()
+			def alldata_nse_file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /NAS1/GENERIC | grep "ALLDATA_${date_}_NSE" | wc -l"', returnStdout: true).trim().toInteger()
 			if (date_ == "TODAY"){
-				bse_file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /spare/local/MDSlogs/GENERIC | grep `date -u +%Y%m%d` | grep "ALLDATA" | grep "BSE" | wc -l"', returnStdout: true).trim().toInteger()
-				nse_file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /spare/local/MDSlogs/GENERIC | grep `date -u +%Y%m%d` | grep "ALLDATA" | grep "NSE" | wc -l"', returnStdout: true).trim().toInteger()
+				alldata_bse_file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /NAS1/GENERIC | grep `date -u +%Y%m%d` | grep "ALLDATA" | grep "BSE" | wc -l"', returnStdout: true).trim().toInteger()
+				alldata_nse_file_count=sh(script: 'ssh dvcinfra@192.168.132.11 "ls /NAS1/GENERIC | grep `date -u +%Y%m%d` | grep "ALLDATA" | grep "NSE" | wc -l"', returnStdout: true).trim().toInteger()
 			}			
 			
-			if(bse_file_count > 0){
-				echo 'BSE Files exist. Skipping rsync.'
+			if(alldata_bse_file_count == 0){
+				echo 'ALLDATA BSE Files does not exist in /NAS1/GENERIC dir. Skipping rsync.'
 			}
 			else{
 				sh 'ssh dvcinfra@192.168.132.11 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_BSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsbse"'
 			}
-			if(nse_file_count > 0){
-				echo 'NSE Files exist. Skipping rsync.'
+			if(alldata_nse_file_count == 0){
+				echo 'ALLDATA NSE Files does not exist in /NAS1/GENERIC dir. Skipping rsync.'
 			}
 			else{
 				sh 'ssh dvcinfra@192.168.132.11 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_NSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsnse"'
