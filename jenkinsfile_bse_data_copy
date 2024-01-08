@@ -38,6 +38,10 @@ pipeline {
               sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/rerun_eod_till_proper_start_end_ratio_numbers.sh ${date_} >/tmp/rerun_eod_logs 2>&1"'
           }
           failure {
+              sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62 >/tmp/rsync62_logs 2>&1"'
+              sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} RSync68 >/tmp/RSync68_logs 2>&1"'
+              sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} RunEOD >/tmp/RunEOD_logs 2>&1"'
+              sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} DataCopyCheck >/tmp/DataCopyCheck_logs 2>&1"'
               echo 'The Data Copy has failed'
           }
     }
