@@ -44,6 +44,10 @@ pipeline {
               sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} RunEOD >/tmp/RunEOD_failed_logs 2>&1"'
               sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} DataCopyCheck >/tmp/DataCopyCheck_failed_logs 2>&1"'
               echo 'The Data Copy has failed'
+	      
+              sh 'sleep 40m'
+
+	      sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/rerun_eod_till_proper_start_end_ratio_numbers.sh ${date_} >/tmp/rerun_eod_logs_failed_stage 2>&1"'
           }
     }
 }
