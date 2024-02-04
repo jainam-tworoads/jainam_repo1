@@ -1,12 +1,6 @@
 pipeline {
     agent any	
     stages {
-        stage('Rsync62') {
-            steps {
-                sh 'echo "Rsync62 stage"'
-                sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62 >/tmp/rsync62_logs 2>&1"' 
-            }
-        }
         stage('RSync68') {
             steps {
                 sh 'echo "RSync68 stage"'
@@ -39,7 +33,8 @@ pipeline {
           }
           failure {
               sh 'sleep 20m'
-              sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62 >/tmp/rsync62_failed_logs 2>&1"'
+              sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62INDB11 >/tmp/rsync62indb11_logs 2>&1"'
+	      sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62INDB13 >/tmp/rsync62indb13_logs 2>&1"'
               sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} RSync68 >/tmp/RSync68_failed_logs 2>&1"'
               sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} RunEOD >/tmp/RunEOD_failed_logs 2>&1"'
               sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} DataCopyCheck >/tmp/DataCopyCheck_failed_logs 2>&1"'
