@@ -33,30 +33,32 @@ pipeline {
                 sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} PreConversion >/tmp/bsepreconversion_logs 2>&1"' 
             }
         }
-        stage('BseDataConversionATOJ') {
-            steps {
-                sh 'echo "BseDataConversion ATOJ stage"'
-                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_ATOJ >/tmp/bseconversionatoj_logs 2>&1"'
-            }
-        }
-	stage('BseDataConversionRest') {
-            steps {
-                sh 'echo "BseDataConversion Rest stage"'
-                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_rest >/tmp/bseconversionrest_logs 2>&1"'
-            }
-        }
-        stage('NseDataConversionATOJ') {
-            steps {
-                sh 'echo "NseDataConversion ATOJ stage"'
-                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_ATOJ >/tmp/nseconversionatoj_logs 2>&1"'
-            }
-        }
-	stage('NseDataConversionRest') {
-            steps {
-                sh 'echo "NseDataConversion Rest stage"'
-                sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs 2>&1"'
-            }
-        }
+	stage('DataConversion'){
+	parallel{
+		stage('BseDataConversion') {
+            		steps {
+                		sh 'echo "BseDataConversion ATOJ"'
+                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_ATOJ >/tmp/bseconversionatoj_logs 2>&1"'
+				sh 'echo "BseDataConversion Rest"'
+                		sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_rest >/tmp/bseconversionrest_logs 2>&1"'
+            		}
+        	}
+		stage('NseDataConversion'){
+			steps{
+				sh 'echo "Sync nse to indb13"'
+				sh 'ssh dvcinfra@192.168.132.11 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} SyncNseINDB13 >/tmp/sync_nse_indb13_logs 2>&1"'
+				sh 'echo "NseDataConversion ATOJ"'
+                		sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_ATOJ >/tmp/nseconversionatoj_logs 2>&1"'
+				sh 'echo "NseDataConversion Rest"'
+                		sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs 2>&1"'
+			}
+		}
+
+	}
+
+	}
+        
+        
 
 
     }
