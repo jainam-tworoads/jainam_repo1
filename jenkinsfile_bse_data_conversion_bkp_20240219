@@ -45,7 +45,7 @@ pipeline {
 			post{
 				always{
 					sh 'echo "Rsync62 INDB11"'
-                			sh 'ssh dvcinfra@192.168.132.11 "/tmp/imp_scripts/bse_data_sync_68.sh ${date_}  >/tmp/rsync68indb11_logs 2>&1"'
+                			sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62INDB11 >/tmp/rsync62indb11_logs 2>&1"'
 				}
 			}
         	}
@@ -61,7 +61,7 @@ pipeline {
 			post{
 				always{
 					sh 'echo "Rsync62 INDB13"'
-                			sh 'ssh dvcinfra@192.168.132.13 "/tmp/imp_scripts/bse_data_sync_68.sh ${date_} >/tmp/rsync68indb13_logs 2>&1"'
+                			sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62INDB13 >/tmp/rsync62indb13_logs 2>&1"'
 				}
 			}
 		}
