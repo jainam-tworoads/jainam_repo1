@@ -1,0 +1,16 @@
+pipeline {
+    agent any	
+    stages {
+        stage('RSync68') {
+            steps {
+                sh 'echo "RSync68 stage"'
+                sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} RSync68 >/tmp/RSync68_logs 2>&1"'
+            }
+        }
+    }
+    post {
+          success {
+              echo 'The Data copy is successful'
+          }
+    }
+}
