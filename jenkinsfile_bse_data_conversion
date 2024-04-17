@@ -56,7 +56,7 @@ pipeline {
 				sh 'echo "NseDataConversion ATOJ"'
                 		sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_ATOJ >/tmp/nseconversionatoj_logs 2>&1"'
 				sh 'echo "NseDataConversion Rest"'
-                		sh 'ssh dvcinfra@192.168.132.15 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs 2>&1"'
+                		sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs 2>&1"'
 			}
 			post{
 				always{
