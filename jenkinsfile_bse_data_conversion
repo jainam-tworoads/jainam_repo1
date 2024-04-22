@@ -5,24 +5,24 @@ pipeline {
 	   steps{
 		sh 'echo "CheckData stage"'
 		script{
-			def alldata_bse_file_count=sh(script: 'ssh dvcinfra@192.168.132.15 "ls /NAS1/GENERIC | grep "ALLDATA_${date_}_BSE" | wc -l"', returnStdout: true).trim().toInteger()
-			def alldata_nse_file_count=sh(script: 'ssh dvcinfra@192.168.132.15 "ls /NAS1/GENERIC | grep "ALLDATA_${date_}_NSE" | wc -l"', returnStdout: true).trim().toInteger()
+			def alldata_bse_file_count=sh(script: 'ssh dvcinfra@192.168.132.13 "ls /NAS1/GENERIC | grep "ALLDATA_${date_}_BSE" | wc -l"', returnStdout: true).trim().toInteger()
+			def alldata_nse_file_count=sh(script: 'ssh dvcinfra@192.168.132.13 "ls /NAS1/GENERIC | grep "ALLDATA_${date_}_NSE" | wc -l"', returnStdout: true).trim().toInteger()
 			if (date_ == "TODAY"){
-				alldata_bse_file_count=sh(script: 'ssh dvcinfra@192.168.132.15 "ls /NAS1/GENERIC | grep `date -u +%Y%m%d` | grep "ALLDATA" | grep "BSE" | wc -l"', returnStdout: true).trim().toInteger()
-				alldata_nse_file_count=sh(script: 'ssh dvcinfra@192.168.132.15 "ls /NAS1/GENERIC | grep `date -u +%Y%m%d` | grep "ALLDATA" | grep "NSE" | wc -l"', returnStdout: true).trim().toInteger()
+				alldata_bse_file_count=sh(script: 'ssh dvcinfra@192.168.132.13 "ls /NAS1/GENERIC | grep `date -u +%Y%m%d` | grep "ALLDATA" | grep "BSE" | wc -l"', returnStdout: true).trim().toInteger()
+				alldata_nse_file_count=sh(script: 'ssh dvcinfra@192.168.132.13 "ls /NAS1/GENERIC | grep `date -u +%Y%m%d` | grep "ALLDATA" | grep "NSE" | wc -l"', returnStdout: true).trim().toInteger()
 			}			
 			
 			if(alldata_bse_file_count == 0){
 				echo 'ALLDATA BSE Files does not exist in /NAS1/GENERIC dir. Skipping rsync.'
 			}
 			else{
-				sh 'ssh dvcinfra@192.168.132.15 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_BSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsbse"'
+				sh 'ssh dvcinfra@192.168.132.13 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_BSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsbse"'
 			}
 			if(alldata_nse_file_count == 0){
 				echo 'ALLDATA NSE Files does not exist in /NAS1/GENERIC dir. Skipping rsync.'
 			}
 			else{
-				sh 'ssh dvcinfra@192.168.132.15 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_NSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsnse"'
+				sh 'ssh dvcinfra@192.168.132.13 "rsync -avz /NAS1/GENERIC/ALLDATA_${date_}_NSE /spare/local/MDSlogs/GENERIC/ >/tmp/logs_to_rsync_mdslogsnse"'
 			}
 		}
 	   }
@@ -30,7 +30,7 @@ pipeline {
         stage('PreConversion') {
             steps {
                 sh 'echo "PreConversion stage"'
-                sh 'ssh dvcinfra@192.168.132.15 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} PreConversion >/tmp/bsepreconversion_logs 2>&1"' 
+                sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} PreConversion >/tmp/bsepreconversion_logs 2>&1"' 
             }
         }
 	stage('DataConversion'){
@@ -38,30 +38,30 @@ pipeline {
 		stage('BseDataConversion') {
             		steps {
                 		sh 'echo "BseDataConversion ATOJ"'
-                		sh 'ssh dvcinfra@192.168.132.15 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_ATOJ >/tmp/bseconversionatoj_logs 2>&1"'
+                		sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_ATOJ >/tmp/bseconversionatoj_logs 2>&1"'
 				sh 'echo "BseDataConversion Rest"'
-                		sh 'ssh dvcinfra@192.168.132.15 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_rest >/tmp/bseconversionrest_logs 2>&1"'
+                		sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} BseDataConversion_rest >/tmp/bseconversionrest_logs 2>&1"'
             		}
 			post{
 				always{
-					sh 'echo "Rsync62 INDB11"'
-                                        sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62INDB11 >/tmp/rsync62indb11_logs 2>&1"'
+					sh 'echo "Rsync62 INDB13"'
+                                        sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62INDB13 >/tmp/rsync62indb13_logs 2>&1"'
 				}
 			}
         	}
 		stage('NseDataConversion'){
 			steps{
-				sh 'echo "Sync nse to indb13"'
-				sh 'ssh dvcinfra@192.168.132.15 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} SyncNseINDB13 >/tmp/sync_nse_indb13_logs 2>&1"'
+				sh 'echo "Sync nse to indb15"'
+				sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} SyncNseINDB15 >/tmp/sync_nse_indb15_logs 2>&1"'
 				sh 'echo "NseDataConversion ATOJ"'
-                		sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_ATOJ >/tmp/nseconversionatoj_logs 2>&1"'
+                		sh 'ssh dvcinfra@192.168.132.15 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_ATOJ >/tmp/nseconversionatoj_logs 2>&1"'
 				sh 'echo "NseDataConversion Rest"'
-                		sh 'ssh dvcinfra@192.168.132.13 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs 2>&1"'
+                		sh 'ssh dvcinfra@192.168.132.15 "/home/pengine/prod//live_scripts/Run_Convert_Both_MTBT_data_indb12_test.sh ${date_} NseDataConversion_rest >/tmp/nseconversionrest_logs 2>&1"'
 			}
 			post{
 				always{
-					sh 'echo "Rsync62 INDB13"'
-                                        sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62INDB13 >/tmp/rsync62indb13_logs 2>&1"'
+					sh 'echo "Rsync62 INDB15"'
+                                        sh 'ssh dvcinfra@10.23.5.62 "/home/pengine/prod/live_scripts/sync_pull_all_bse_data_from_indb_test.sh ${date_} Rsync62INDB15 >/tmp/rsync62indb15_logs 2>&1"'
 				}
 			}
 		}
